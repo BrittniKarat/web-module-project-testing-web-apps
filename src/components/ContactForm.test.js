@@ -7,10 +7,10 @@ import ContactForm from './ContactForm';
 import DisplayComponent from './DisplayComponent';
 
 
-describe('Tests', () => {
+
     
 
-    test('renders without errors', ()=>{
+test('renders without errors', ()=>{
     render(<ContactForm/>);
     const label = screen.getByLabelText(/First Name*/i);
     expect(label).toBeTruthy();
@@ -111,10 +111,42 @@ test('renders all firstName, lastName and email text when submitted. Does NOT re
     const submitBtn = screen.getByRole('button');
     userEvent.click(submitBtn);
 
-    
+    const firstNameRender = await screen.findByTestId('firstnameDisplay');
+    expect(firstNameRender).toBeTruthy();
+
+    const lastNameRender = await screen.findByTestId('lastnameDisplay');
+    expect(lastNameRender).toBeTruthy();
+
+    const emailRender = await screen.findByTestId('emailDisplay');
+    expect(emailRender).toBeTruthy();
+
+    const messageRender = await screen.queryByTestId('messageDisplay');
+    expect(messageRender).toBeFalsy();
 });
 
 test('renders all fields text when all fields are submitted.', async () => {
     render(<ContactForm/>);
+    const firstName = screen.getByPlaceholderText('Edd');
+    userEvent.type(firstName, 'Beth Anne');
+
+    const lastName = screen.getByPlaceholderText('Burke');
+    userEvent.type(lastName, 'Huffenstuff');
+
+    const email = screen.getByPlaceholderText('bluebill1049@hotmail.com');
+    userEvent.type(email, 'validAddress@valid.org')
+    
+    const submitBtn = screen.getByRole('button');
+    userEvent.click(submitBtn);
+    
+    const firstNameRender = screen.findAllByTestId('firstnameDisplay');
+    expect(firstNameRender).toBeTruthy();
+
+    const lastNameRender = screen.findAllByTestId('lastnameDisplay');
+    expect(lastNameRender).toBeTruthy();
+
+    const emailRender = screen.findAllByTestId('emailDisplay');
+    expect(emailRender).toBeTruthy();
+
+    const messageRender = screen.findAllByTestId('messageDisplay');
+    expect(messageRender).toBeTruthy();
 });
-})
